@@ -12,3 +12,6 @@ vscode:
 ports:
   - port: 8080
     onOpen: open-browser
+
+  - port: 8000
+    onOpen: open-browser
