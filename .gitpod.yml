@@ -9,6 +9,10 @@ vscode:
   extensions:
     - octref.vetur@0.27.0:a+OljFHzmH1YrzbM13sMhQ==
 
+    - abusaidm.html-snippets@0.2.1:HrYIjYqOIABbxFB9g9kqXQ==
+
+    - anseki.vscode-color@0.4.5:6L3EhKJFHuizA7wqZz6/+g==
+
 ports:
   - port: 8080
     onOpen: open-browser

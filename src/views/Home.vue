@@ -1,46 +1,116 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+    <div class="hello">
+        <div id="chatWindow">
+            <ul id="chat">
+                <li id="message" v-for="message in messages" :key="message.name">
+                    {{ message.name }}: {{ message.message }}
+                </li>
+            </ul>
+            <div id="input">
+                <label>Nome:</label>
+                <input v-model="name" type="text" id="typing name" name="typing-name"><br>
+                <label>Mensagem:</label>
+                <input v-model="message" type="text" id="typed-message" name="typed-message">
+                <input v-on:click="sendMessage" type="submit" id="submit" name="submit">
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'Home',
-  props: {
-    msg: String
-  }
+    name: 'Home',
+    props: {
+        msg: String
+    },
+
+    data: function() { return{
+        messages: [],
+        name: '',
+        message: ''
+    }},
+
+    sockets: {
+        connect: function () {
+            console.log('socket connected!!!!!!!');
+        },
+        customEmit: function (data) {
+            console.log('this method was fired by the socket server. eg: io.emit("customEmit", '+ data+ ')')
+            return data;
+        },
+        connect_error: function (err) {
+            console.log("erro: " + err);
+        },
+        messageReceived: function (msg) {
+            this.addMessage(msg);
+            console.log("veio");
+        }
+    },
+
+    methods: {
+            addMessage: function(messager) {
+                this.messages.push({ name: messager.name, message: messager.message})
+                return;
+            },
+
+            sendMessage: function() {
+                let message = {
+                    name: this.name,
+                    message: this.message
+                }
+                this.$socket.emit('messageSent', message)
+                console.log('sent');
+                this.name = this.message = "";
+                return message;
+            }
+    }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.hello, #chatWindow, #input, #chat {
+    display: flex;
+}
+
+.hello, #chatWindow {
+    justify-content: center;
+    align-items: center;
+}
+
+.hello {
+    flex: 1;
+    background-color: #ededed;
+    height: 100%;
+}
+
+#chatWindow {
+    flex-direction: column;
+    flex: 1;
+    height: 80%;
+}
+
+#input {
+    flex: 1;
+    height: 10px
+}
+
+#chat {
+    background-color: #ffffff;
+    width: 60vw;
+    height: 50vh;
+    flex: 20;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow: auto;
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+
+#message {
+    height: 3ch;
+}
+
 h3 {
   margin: 40px 0 0;
 }

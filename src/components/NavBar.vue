@@ -1,6 +1,6 @@
 <template>
 	<div id="nav">
-		<router-link id="navScopes" to="/">Home</router-link>
+		<router-link id="navScopes" class="btn" to="/"><h1>Chat</h1></router-link>
 	</div>
 </template>
 
@@ -17,7 +17,7 @@
 	#nav {
 		display: flex;
 		justify-content: center;
-		background-color: #141414;
+		background-color: #b8e8ff;
 	}
 
 	#navScopes {
@@ -37,6 +37,6 @@
 	}
 
 	#nav #navScopes.router-link-exact-active {
-		color: #E50914;
+		color: #00f2ff;
 	}
 </style>
